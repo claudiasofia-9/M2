@@ -1,50 +1,49 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { addProduct } from "../../redux/actions.js";
 import Caja from '../../assets/caja.png';
 import './form.css';
 
-class Form extends React.Component{
-   constructor(props){
-      super(props)
+function Form({ addProduct }) {
+ const [product, setProduct] = useState({ name: "", price: "", id: ""});
 
-      this.state = {
-         name: "",
-         price: "",
-         id: ""
-      }
-   }
+ function handleInputChange(e) {
+   e.preventDefault();
+   setProduct({ ...product, [e.target.name]: e.target.value });
+ }
 
-   handleInputChange = (event) => {
-      this.setState({ ...this.state, [event.target.name]: event.target.value });
-   }
+ function handleSubmit() {
+   addProduct({ ...product, id: Date.now() });
+ }
 
-   render(){
       return (
-         <form className='formBg'>
+         <div className='formBg'>
             <div className='inputBox'>
                <label>Nombre: </label>
-               <input
-                  name='name'
-                  onChange={this.handleInputChange}
-                  value={this.state.name}
-               />
+               <input name="name" onChange={handleInputChange} value={product.name} />
             </div>
             <div className='inputBox'>
                <label>Precio:</label>
                <input
-                  type='number'
+                  type="number"
                   name='price'
-                  onChange={this.handleInputChange}
-                  value={this.state.price}
+                  onChange={handleInputChange}
+                  value={product.price}
                />
             </div>
-            <button className='formBtn'>¡ADD!</button>
-            <img src={Caja} alt='' className='logo' />
-         </form>
-      )
+            <button className="formBtn" onClick={handleSubmit}>¡ADD!</button>
+            <img src={Caja} alt='' className='logo' /> 
+         </div> 
+      );
    }
+
+export function mapDispatchToProps(dispatch) {
+   return {
+      addProduct: product => dispatch(addProduct(product)),
+   };
 }
 
-export function mapDispatchToProps() {}
-
 export default connect(null, mapDispatchToProps)(Form);
+
+
+
